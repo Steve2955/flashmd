@@ -3,9 +3,12 @@ import App from './App.vue';
 import './registerServiceWorker';
 import store from './store';
 import './assets/app.scss';
-import router from './router'
+import router from './router';
+import Init from './common/init';
 
 Vue.config.productionTip = false;
+
+Init.init();
 
 new Vue({
 	store,

@@ -1,9 +1,7 @@
+import Vue from 'vue';
 import { LOAD_LEARNSET_FROM_FILE, LOAD_LEARNSET_FROM_URL, PARSE_LEARNSET } from './actions.type';
 import { SET_LEARNSET } from './mutations.type';
 import fileDialog from 'file-dialog';
-import markdownit from 'markdown-it';
-
-const md = markdownit();
 
 const state = {
 	learnset: {},
@@ -14,19 +12,23 @@ const getters = {
 };
 
 const actions = {
-	async [LOAD_LEARNSET_FROM_FILE]({ dispatch }) {
-		const files = await fileDialog({ accept: '.md,.markdown' });
-		if(!files[0]) throw Error('No file selected');
-		const reader = new FileReader();
-		reader.onload = () => dispatch(PARSE_LEARNSET, reader.result);
-		reader.readAsText(files[0]);
+	[LOAD_LEARNSET_FROM_FILE]({ dispatch }) {
+		// eslint-disable-next-line
+		return new Promise(async (resolve, reject) => {
+			const files = await fileDialog({ accept: '.md,.markdown' });
+			if(!files[0]) reject(new Error('No file selected'));
+			const reader = new FileReader();
+			reader.onload = () => resolve(dispatch(PARSE_LEARNSET, reader.result));
+			reader.onerror = () => reject(new Error('No file selected'));
+			reader.readAsText(files[0]);
+		});
 	},
 	[LOAD_LEARNSET_FROM_URL]({ dispatch }) {
 		dispatch(PARSE_LEARNSET, '');
 	},
 	[PARSE_LEARNSET]({ commit }, markdown) {
 
-		let tokens = md.parse(markdown, {});
+		let tokens = Vue.$md.parse(markdown, {});
 		let cards = [];
 		let card = {front: [], back: []};
 		let isFront = true;
@@ -47,7 +49,9 @@ const actions = {
 			}
 		}
 		cards = cards.filter(card => card.back.length);
-		commit(SET_LEARNSET, markdown);
+		const learnset = {cards};
+		commit(SET_LEARNSET, learnset);
+		return learnset;
 	},
 };
 

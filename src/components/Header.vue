@@ -1,6 +1,6 @@
 <template>
 	<nav class="navbar fixed-top navbar-dark bg-dark">
-		<span class="navbar-brand mb-0 h1">FlashMD</span>
+		<router-link class="navbar-brand mb-0 h1" tag="span" to="/">FlashMD</router-link>
 	</nav>
 </template>
 
