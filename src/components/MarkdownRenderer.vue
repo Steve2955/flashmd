@@ -12,7 +12,6 @@ export default {
 	methods: {
 		renderMD(elements){
 			elements = elements || this.elements;
-			console.log(elements);
 			this.$refs.body.innerHTML = this.$md.renderer.render(elements, this.$md.options, {});
 		},
 	},
