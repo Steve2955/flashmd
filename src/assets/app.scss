@@ -4,3 +4,19 @@
 hr {
 	border-top: 1px solid #bbb;
 }
+
+* {
+	overflow: overlay;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+ul li::before {
+	content: "\2022";
+	color: $gray-100;
+	font-weight: bold;
+	display: inline-block;
+	width: 1em;
+}

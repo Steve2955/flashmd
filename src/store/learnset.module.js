@@ -2,6 +2,7 @@ import Vue from 'vue';
 import { LOAD_LEARNSET_FROM_FILE, LOAD_LEARNSET_FROM_URL, PARSE_LEARNSET } from './actions.type';
 import { SET_LEARNSET } from './mutations.type';
 import fileDialog from 'file-dialog';
+import mdUtil from '@/common/md-util';
 
 const state = {
 	learnset: {},
@@ -24,7 +25,15 @@ const actions = {
 		});
 	},
 	[LOAD_LEARNSET_FROM_URL]({ dispatch }) {
-		dispatch(PARSE_LEARNSET, '');
+		let url = prompt("Please enter a url to your markdown file", "");
+		if (!url) return;
+		return fetch(url).then((response) => {
+				if(response.status == 200){
+					return response.text();
+				}else{
+					new Error(`Failed to load file with statuscode ${response.status}`);
+				}
+		}).then(response => dispatch(PARSE_LEARNSET, response));
 	},
 	[PARSE_LEARNSET]({ commit }, markdown) {
 
@@ -37,7 +46,8 @@ const actions = {
 			if((tokens[i].type === 'heading_open' && !isFront ) || i==tokens.length-1){
 					isFront = true;
 					const category = [...cards].reverse().find(c => c.front[0].tag[1] < card.front[0].tag[1]);
-					if(category) card.category = category.front[1].content; // ToDo: consider other cases
+					if(category) card.category = mdUtil.getCardTitle(category);
+					card.title = mdUtil.getCardTitle(card);
 					cards.push(card);
 					card = {front: [], back: []};
 			}

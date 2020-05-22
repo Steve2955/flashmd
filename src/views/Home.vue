@@ -7,14 +7,14 @@
 			<p class="text-center">Just open a markdown file and start learning</p>
 			<div class="d-flex justify-content-center">
 				<button type="button" class="btn btn-outline-light mr-2" @click="openFile">Open File</button>
-				<button type="button" class="btn btn-outline-light">Open URL</button>
+				<button type="button" class="btn btn-outline-light" @click="openURL">Open URL</button>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { LOAD_LEARNSET_FROM_FILE } from '@/store/actions.type';
+import { LOAD_LEARNSET_FROM_FILE, LOAD_LEARNSET_FROM_URL } from '@/store/actions.type';
 
 export default {
 	name: 'Home',
@@ -25,7 +25,14 @@ export default {
 					this.$router.push('learn');
 				})
 				.catch(err => console.error(err));
-		}
+		},
+		openURL: function(){
+			this.$store.dispatch(LOAD_LEARNSET_FROM_URL)
+				.then(() => {
+					this.$router.push('learn');
+				})
+				.catch(err => console.error(err));
+		},
 	}
 }
 </script>
