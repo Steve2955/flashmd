@@ -7,6 +7,15 @@
 					<MarkdownRenderer v-if="showBack" :elements="learnset.cards[currentCard].back"/>
 				</div>
 			</div>
+			<div class="card" v-else>
+				<div class="card-body bg-dark">
+					<h4 class="text-center my-5">Something went wrong!</h4>
+					<img class="mx-auto d-block mt-5" width="100" height="100" src="@/assets/icons/sentiment_very_dissatisfied.svg" alt="">
+					<div class="d-flex justify-content-center my-5">
+						<router-link tag="button" to="/" type="button" class="btn btn-outline-light">Return to home</router-link>
+					</div>
+				</div>
+			</div>
 		</div>
 		<Footer @nextCard="nextCard" @prevCard="prevCard"/>
 	</div>

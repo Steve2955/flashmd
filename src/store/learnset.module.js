@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { LOAD_LEARNSET_FROM_FILE, LOAD_LEARNSET_FROM_URL, PARSE_LEARNSET } from './actions.type';
 import { SET_LEARNSET } from './mutations.type';
 import fileDialog from 'file-dialog';
-import mdUtil from '@/common/md-util';
+import learnsetUtil from '@/common/learnset-util';
 
 const state = {
 	learnset: {},
@@ -36,7 +36,6 @@ const actions = {
 		}).then(response => dispatch(PARSE_LEARNSET, response));
 	},
 	[PARSE_LEARNSET]({ commit }, markdown) {
-
 		let tokens = Vue.$md.parse(markdown, {});
 		let cards = [];
 		let card = {front: [], back: []};
@@ -46,8 +45,8 @@ const actions = {
 			if((tokens[i].type === 'heading_open' && !isFront ) || i==tokens.length-1){
 					isFront = true;
 					const category = [...cards].reverse().find(c => c.front[0].tag[1] < card.front[0].tag[1]);
-					if(category) card.category = mdUtil.getCardTitle(category);
-					card.title = mdUtil.getCardTitle(card);
+					if(category) card.category = learnsetUtil.getCardTitle(category);
+					card.title = learnsetUtil.getCardTitle(card);
 					cards.push(card);
 					card = {front: [], back: []};
 			}
