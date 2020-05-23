@@ -3,6 +3,7 @@ import App from './App.vue';
 import './registerServiceWorker';
 import store from './store';
 import './assets/app.scss';
+import 'bootstrap';
 
 import router from './router';
 import Init from './common/init';
