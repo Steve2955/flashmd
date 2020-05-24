@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="container pb-5">
+		<div class="container">
 			<div class="card" v-if="learnset && learnset.cards && learnset.cards.length > 1">
 				<div class="card-body bg-dark">
 					<h2 class="h4">{{learnset.cards[currentCard].title}}</h2>
@@ -76,3 +76,9 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+.container{
+	padding-bottom: 5.5rem;
+}
+</style>
