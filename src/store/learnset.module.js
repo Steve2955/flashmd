@@ -3,6 +3,7 @@ import { LOAD_LEARNSET_FROM_FILE, LOAD_LEARNSET_FROM_URL, TOKENIZE_MARKDOWN, PAR
 import { SET_LEARNSET } from './mutations.type';
 import fileDialog from 'file-dialog';
 import learnsetUtil from '@/common/learnset-util';
+import { v4 as uuidv4 } from 'uuid';
 
 const state = {
 	learnset: {},
@@ -48,7 +49,7 @@ const actions = {
 				const category = [...cards].reverse().find(c => c.front[0].tag[1] < card.front[0].tag[1]);
 				if(category) card.category = learnsetUtil.getCardTitle(category);
 				card.title = learnsetUtil.getCardTitle(card);
-				cards.push(card);
+				cards.push({ ...card, id: uuidv4() });
 				card = {front: [], back: []};
 			}
 
@@ -65,8 +66,8 @@ const actions = {
 
 		const url = markdown.url || undefined;
 		const name = markdown.name || undefined;
-
-		const learnset = { cards, url, name };
+		const id = uuidv4();
+		const learnset = { cards, url, name, id };
 		commit(SET_LEARNSET, learnset);
 		return learnset;
 	},
