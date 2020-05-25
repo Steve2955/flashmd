@@ -29,6 +29,8 @@ Currently this is just a small side-project of mine intended for personal use. B
 The core technology this project is build on is ```Vue.js```. ```Markdown-it``` is used to handle everything related the markdown parsing/rendering and ```Bootstrap``` helps to make this project not look too ugly.
 * [Vue.js](https://vuejs.org/)
 * [markdown-it](https://github.com/markdown-it/markdown-it)
+  * [markdown-it-texmath](https://github.com/goessner/markdown-it-texmath)
+* [KaTeX](https://katex.org/)
 * [Bootstrap](https://getbootstrap.com)
 
 ## License
