@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { LOAD_LEARNSET_FROM_FILE, LOAD_LEARNSET_FROM_URL, TOKENIZE_MARKDOWN, PARSE_LEARNSET } from '@/store/actions.type';
+import { LOAD_MARKDOWN_FROM_FILE, LOAD_MARKDOWN_FROM_URL, LOAD_LEARNSET_FROM_TOKENS } from '@/store/actions.type';
 import LearnsetOptionsModal from '@/components/LearnsetOptionsModal.vue';
 import learnsetUtil from '@/common/learnset-util';
 
@@ -36,19 +36,24 @@ export default {
 		};
 	},
 	methods: {
-		openFile: function(){
-			this.$store.dispatch(LOAD_LEARNSET_FROM_FILE)
-				.then(md => this.$store.dispatch(TOKENIZE_MARKDOWN, md))
-				.then(tokens => this.showOptionsDialog({ tokens }))
-				.catch(err => console.error(err));
+		openFile: async function(){
+			// show file-dialog to user
+			const md = await this.$store.dispatch(LOAD_MARKDOWN_FROM_FILE);
+			// parse markdown
+			const tokens = learnsetUtil.getTokensFromMarkdown(md);
+			// show import option dialog
+			this.showOptionsDialog({ tokens });
 		},
-		openURL: function(){
-			const url = prompt("Please enter a url to your markdown file", "");
+		openURL: async function(){
+			// get the url from the user
+			const url = prompt('Please enter a url to your markdown file', '');
 			if (!url) return console.error('empty url');
-			this.$store.dispatch(LOAD_LEARNSET_FROM_URL, url)
-				.then(md => this.$store.dispatch(TOKENIZE_MARKDOWN, md))
-				.then(tokens => this.showOptionsDialog({ tokens, url }))
-				.catch(err => console.error(err));
+			// load markdown from url
+			const md = await this.$store.dispatch(LOAD_MARKDOWN_FROM_URL, url);
+			// parse markdown
+			const tokens = learnsetUtil.getTokensFromMarkdown(md);
+			// show import option dialog
+			this.showOptionsDialog({ tokens, url });
 		},
 		showOptionsDialog: function({ tokens, url }){
 			// save tokens for later
@@ -62,7 +67,7 @@ export default {
 		parseMarkdown: function(){
 			const { levels, name, url } = this.options;
 			const { tokens } = this;
-			this.$store.dispatch(PARSE_LEARNSET, { tokens, levels, name, url })
+			this.$store.dispatch(LOAD_LEARNSET_FROM_TOKENS, { tokens, levels, name, url })
 				.then(() => this.$router.push('/learn'))
 				.catch(err => console.error(err));
 		},

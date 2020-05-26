@@ -1,9 +1,7 @@
-import Vue from 'vue';
-import { LOAD_LEARNSET_FROM_FILE, LOAD_LEARNSET_FROM_URL, TOKENIZE_MARKDOWN, PARSE_LEARNSET } from './actions.type';
+import { LOAD_MARKDOWN_FROM_FILE, LOAD_MARKDOWN_FROM_URL, LOAD_LEARNSET_FROM_TOKENS, LOAD_LEARNSET_FROM_MARKDOWN } from './actions.type';
 import { SET_LEARNSET } from './mutations.type';
 import fileDialog from 'file-dialog';
 import learnsetUtil from '@/common/learnset-util';
-import { v4 as uuidv4 } from 'uuid';
 
 const state = {
 	learnset: {},
@@ -14,7 +12,7 @@ const getters = {
 };
 
 const actions = {
-	[LOAD_LEARNSET_FROM_FILE]() {
+	[LOAD_MARKDOWN_FROM_FILE]() {
 		// eslint-disable-next-line
 		return new Promise(async (resolve, reject) => {
 			const files = await fileDialog({ accept: '.md,.markdown' });
@@ -25,7 +23,7 @@ const actions = {
 			reader.readAsText(files[0]);
 		});
 	},
-	[LOAD_LEARNSET_FROM_URL](url) {
+	[LOAD_MARKDOWN_FROM_URL](url) {
 		return fetch(url).then((response) => {
 				if(response.status == 200){
 					return response.text();
@@ -34,40 +32,13 @@ const actions = {
 				}
 		});
 	},
-	[TOKENIZE_MARKDOWN](context, markdown){
-		return Vue.$md.parse(markdown, {});
+	[LOAD_LEARNSET_FROM_MARKDOWN](context, md){
+		const { markdown, ...options} = md;
+		return learnsetUtil.getLearnsetFromMarkdown(markdown, options);
 	},
-	async [PARSE_LEARNSET]({ commit, dispatch }, markdown) {
-		let tokens = markdown.tokens || await dispatch(TOKENIZE_MARKDOWN, markdown.md || markdown);
-		let cards = [];
-		let card = {front: [], back: []};
-		let isFront = true;
-
-		for(let i = 0; i < tokens.length; i++){
-			if((tokens[i].type === 'heading_open' && !isFront ) || i==tokens.length-1){
-				isFront = true;
-				const category = [...cards].reverse().find(c => c.front[0].tag[1] < card.front[0].tag[1]);
-				if(category) card.category = learnsetUtil.getCardTitle(category);
-				card.title = learnsetUtil.getCardTitle(card);
-				cards.push({ ...card, id: uuidv4() });
-				card = {front: [], back: []};
-			}
-
-			card[isFront?'front':'back'].push(tokens[i]);
-
-			if(tokens[i].type === 'heading_close' && isFront){
-				isFront = false;
-			}
-		}
-		// remove empty cards
-		cards = cards.filter(card => card.back.length);
-		// remove disabled levels
-		cards = cards.filter(card => markdown.levels[learnsetUtil.getCardLevel(card)]);
-
-		const url = markdown.url || undefined;
-		const name = markdown.name || undefined;
-		const id = uuidv4();
-		const learnset = { cards, url, name, id };
+	[LOAD_LEARNSET_FROM_TOKENS]({ commit }, md) {
+		const { tokens, ...options} = md;
+		const learnset = learnsetUtil.getLearnsetFromTokens(tokens, options);
 		commit(SET_LEARNSET, learnset);
 		return learnset;
 	},

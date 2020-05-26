@@ -9,16 +9,12 @@ export default {
 		const tm = texmath.use(katex);
 		const md = markdownit({
 			highlight: function (str, lang) {
-				try {
 					if (lang && hljs.getLanguage(lang)) {
 						return `<pre class="hljs"><code>${hljs.highlight(lang, str, true).value}</code></pre>`;
 					}
-				}finally{
-					return '<pre class="hljs"><code>' + markdownit.utils.escapeHtml(str) + '</code></pre>';
-				}
+					return `<pre class="hljs"><code>${markdownit.utils.escapeHtml(str)}</code></pre>`;
 			}
-		}).use(tm,{delimiters:'dollars',macros:{"\\RR": "\\mathbb{R}"}});
-
+		}).use(tm, {delimiters:'dollars',macros:{"\\RR": "\\mathbb{R}"}});
 		Vue.prototype.$md = Vue.$md = md;
 	}
 };
