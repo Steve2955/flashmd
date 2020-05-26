@@ -31,6 +31,7 @@ The core technology this project is build on is ```Vue.js```. ```Markdown-it``` 
 * [markdown-it](https://github.com/markdown-it/markdown-it)
   * [markdown-it-texmath](https://github.com/goessner/markdown-it-texmath)
 * [KaTeX](https://katex.org/)
+* [highlight.js](https://highlightjs.org/)
 * [Bootstrap](https://getbootstrap.com)
 
 ## License
