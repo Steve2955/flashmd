@@ -1,3 +1,6 @@
+import Vue from 'vue';
+import { v4 as uuidv4 } from 'uuid';
+
 export default {
 	getCardTitle(card) {
 		return card.front[1].content; // ToDo: consider other cases
@@ -8,5 +11,45 @@ export default {
 	},
 	getCardLevel(card){
 		return parseInt(card.front[0].tag[1])-1;
-	}
+	},
+	getTokensFromMarkdown(markdown){
+		return Vue.$md.parse(markdown, {});
+	},
+	getLearnsetFromTokens(tokens, options){
+		let cards = [];
+		let card = {front: [], back: []};
+		let isFront = true;
+
+		for(let i = 0; i < tokens.length; i++){
+			// new heading starts or end of array reached
+			if((tokens[i].type === 'heading_open' && !isFront ) || i == tokens.length-1){
+				// find the 'parent' card
+				const category = [...cards].reverse().find(c => this.getCardLevel(c) < this.getCardLevel(card));
+				if(category) card.category = this.getCardTitle(category);
+				// some additional info for the card
+				card.title = this.getCardTitle(card);
+				cards.push({ ...card, id: uuidv4() });
+				// reset variables
+				isFront = true;
+				card = {front: [], back: []};
+			}
+			// add token to the current side of the card
+			card[isFront?'front':'back'].push(tokens[i]);
+			// if the end of a heading is reached switch to the back of the card
+			if(tokens[i].type === 'heading_close' && isFront) isFront = false;
+		}
+		// remove empty cards
+		cards = cards.filter(card => card.back.length);
+		// remove disabled levels
+		cards = cards.filter(card => options.levels[this.getCardLevel(card)]);
+		// additional info for the learnset
+		const { url, name } = options;
+		const id = uuidv4();
+		const created = Date.now();
+		// return everything
+		return { cards, url, name, id, created };
+	},
+	getLearnsetFromMarkdown(markdown, options){
+		return this.getLearnsetFromTokens(this.getTokensFromMarkdown(markdown), options);
+	},
 };
