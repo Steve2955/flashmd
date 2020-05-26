@@ -33,12 +33,10 @@ export default {
 				isFront = true;
 				card = {front: [], back: []};
 			}
-
+			// add token to the current side of the card
 			card[isFront?'front':'back'].push(tokens[i]);
-
-			if(tokens[i].type === 'heading_close' && isFront){
-				isFront = false;
-			}
+			// if the end of a heading is reached switch to the back of the card
+			if(tokens[i].type === 'heading_close' && isFront) isFront = false;
 		}
 		// remove empty cards
 		cards = cards.filter(card => card.back.length);
@@ -47,8 +45,9 @@ export default {
 		// additional info for the learnset
 		const { url, name } = options;
 		const id = uuidv4();
-
-		return { cards, url, name, id };
+		const created = Date.now();
+		// return everything
+		return { cards, url, name, id, created };
 	},
 	getLearnsetFromMarkdown(markdown, options){
 		return this.getLearnsetFromTokens(this.getTokensFromMarkdown(markdown), options);

@@ -1,28 +1,40 @@
 <template>
-	<div class="container pt-5">
-		<h1 class="text-center h3">Welcome to FlashMD</h1>
-		<p class="text-center h6 mt-3">A simple tool to make digital flashcards from your exisiting markdown notes</p>
-		<img class="mx-auto d-block mt-5" width="150" height="150" src="@/assets/app-icon/ic_base.svg">
-		<div class="mt-5">
-			<p class="text-center">Just open a markdown file and start learning</p>
-			<div class="d-flex justify-content-center">
-				<button type="button" class="btn btn-outline-light mr-2" @click="openFile">Open File</button>
-				<button type="button" class="btn btn-outline-light" @click="openURL">Open URL</button>
+	<div class="container pt-2">
+		<div class="card bg-dark border border-secondary mb-3">
+			<div class="card-body text-center">
+				<div class="welcome mb-5" v-if="!learnsets.length">
+					<h1 class="h3">Welcome to FlashMD</h1>
+					<p class="text-center h6 mt-3">A simple tool to make digital flashcards from your exisiting markdown notes</p>
+					<img class="mx-auto d-block mt-5" width="120" height="120" src="@/assets/app-icon/ic_base.svg">
+				</div>
+				<p class="text-center" v-if="!learnsets.length">Just open a markdown file and start learning</p>
+				<p class="text-center" v-else>Choose from your learnsets below or open a markdown file</p>
+				<div class="d-flex justify-content-center">
+					<button type="button" class="btn btn-outline-light mr-2" @click="openFile">Open File</button>
+					<button type="button" class="btn btn-outline-light" @click="openURL">Open URL</button>
+				</div>
 			</div>
 		</div>
+
+		<LearnsetList :learnsets="learnsets" @onLearnsetSelected="openLearnset" @onDeleteLearnset="deleteLearnset"/>
+
 		<LearnsetOptionsModal :options.sync="options" :active.sync="showLearnsetOptionsModal" @saved="parseMarkdown"/>
 	</div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { LOAD_MARKDOWN_FROM_FILE, LOAD_MARKDOWN_FROM_URL, LOAD_LEARNSET_FROM_TOKENS } from '@/store/actions.type';
+import { SET_LEARNSET, DELETE_LEARNSET } from '@/store/mutations.type';
 import LearnsetOptionsModal from '@/components/LearnsetOptionsModal.vue';
+import LearnsetList from '@/components/LearnsetList.vue';
 import learnsetUtil from '@/common/learnset-util';
 
 export default {
 	name: 'Home',
 	components: {
 		LearnsetOptionsModal,
+		LearnsetList,
 	},
 	data(){
 		return {
@@ -34,6 +46,9 @@ export default {
 				levels: [true, true, true, true, true, true],
 			},
 		};
+	},
+	computed: {
+		...mapGetters(['learnsets']),
 	},
 	methods: {
 		openFile: async function(){
@@ -71,6 +86,13 @@ export default {
 				.then(() => this.$router.push('/learn'))
 				.catch(err => console.error(err));
 		},
+		openLearnset: function(learnset){
+			this.$store.commit(SET_LEARNSET, learnset);
+			this.$router.push('/learn');
+		},
+		deleteLearnset: function(learnset){
+			this.$store.commit(DELETE_LEARNSET, learnset);
+		}
 	}
 }
 </script>

@@ -15,6 +15,7 @@ $gray-600: #555 !default;
 $gray-700: #282828 !default;
 $gray-800: #222 !default;
 $gray-900: #212529 !default;
+$gray-990: #121212 !default;
 $black:    #000 !default;
 
 $blue:    #2A9FD6 !default;
@@ -42,7 +43,7 @@ $yiq-contrasted-threshold:  175 !default;
 
 // Body
 
-$body-bg:       #060606 !default;
+$body-bg:       $gray-990 !default;
 $body-color:    $gray-400 !default;
 
 // Fonts
