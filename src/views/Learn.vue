@@ -1,12 +1,13 @@
 <template>
 	<div>
-		<div class="container pt-3">
+		<div class="container pt-3 mb-3">
 			<div class="card" v-if="learnset && learnset.cards && learnset.cards.length > 1">
 				<div class="card-body bg-dark">
 					<h2 class="h4">{{learnset.cards[currentCard].title}}</h2>
 					<MarkdownRenderer v-if="showBack" :elements="learnset.cards[currentCard].back"/>
 				</div>
 			</div>
+			<CardControl :showBack.sync="showBack" v-if="learnset && learnset.cards && learnset.cards.length > 1" @nextCard="nextCard" @prevCard="prevCard" @knownCard="knownCard" @unknownCard="unknownCard"/>
 			<div class="card" v-else>
 				<div class="card-body bg-dark">
 					<h4 class="text-center my-5">Something went wrong!</h4>
@@ -17,23 +18,22 @@
 				</div>
 			</div>
 		</div>
-		<Footer @nextCard="nextCard" @prevCard="prevCard"/>
 	</div>
 </template>
 
 
 <script>
 import { mapGetters } from "vuex";
-import { RESET_LEARNSET, SET_LEARNSET_FROM_ID } from '@/store/mutations.type';
+import { RESET_LEARNSET, SET_LEARNSET_FROM_ID, KNOWN_CARD, UNKNOWN_CARD } from '@/store/mutations.type';
 
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
-import Footer from '@/components/Footer.vue';
+import CardControl from '@/components/CardControl.vue';
 
 export default {
 	name: "Learn",
 	components: {
 		MarkdownRenderer,
-		Footer,
+		CardControl,
 	},
 	data(){
 		return {
@@ -53,21 +53,31 @@ export default {
 			this.showBack = false;
 			this.currentCard = (this.currentCard<1) ? (this.learnset.cards.length-1) : --this.currentCard;
 		},
+		knownCard: function(){
+			this.$store.commit(KNOWN_CARD, this.currentCard);
+			this.nextCard();
+		},
+		unknownCard: function(){
+			this.$store.commit(UNKNOWN_CARD, this.currentCard);
+			this.nextCard();
+		},
 	},
 	mounted() {
 		this._keyListener = function(e){
 			switch(e.keyCode){
 				case 32: // space
 					e.preventDefault();
-					this.showBack = true;
+					this.showBack = !this.showBack;
 					break;
 				case 39: // right-arrow
 					e.preventDefault();
-					this.nextCard();
+					if(this.showBack) this.knownCard()
+					else this.nextCard();
 					break;
 				case 37: // left-arrow
 					e.preventDefault();
-					this.prevCard();
+					if(this.showBack) this.unknownCard()
+					else this.prevCard();
 					break;
 			}
 		};

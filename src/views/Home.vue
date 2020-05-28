@@ -14,17 +14,13 @@
 				</div>
 			</div>
 		</div>
-
 		<LearnsetList :learnsets="learnsets" @onLearnsetSelected="openLearnset" @onDeleteLearnset="deleteLearnset"/>
-
 	</div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import { SET_LEARNSET } from '@/store/mutations.type';
 import LearnsetList from '@/components/LearnsetList.vue';
-import learnsetUtil from '@/common/learnset-util';
 
 export default {
 	name: 'Home',

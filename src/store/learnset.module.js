@@ -1,5 +1,5 @@
 import { LOAD_MARKDOWN_FROM_FILE, LOAD_MARKDOWN_FROM_URL, ADD_LEARNSET_FROM_TOKENS, ADD_LEARNSET_FROM_MARKDOWN } from './actions.type';
-import { SET_LEARNSET, SET_LEARNSET_FROM_ID, PUSH_LEARNSET, RESET_LEARNSET, DELETE_LEARNSET } from './mutations.type';
+import { SET_LEARNSET, SET_LEARNSET_FROM_ID, PUSH_LEARNSET, RESET_LEARNSET, DELETE_LEARNSET, KNOWN_CARD, UNKNOWN_CARD } from './mutations.type';
 import fileDialog from 'file-dialog';
 import learnsetUtil from '@/common/learnset-util';
 
@@ -53,8 +53,15 @@ const mutations = {
 	[PUSH_LEARNSET](state, learnset) { state.learnsets.push(learnset); },
 	[SET_LEARNSET_FROM_ID](state, id) { state.learnset = state.learnsets.find(l => l.id === id); },
 	[RESET_LEARNSET](state) { state.learnset = undefined },
-	[DELETE_LEARNSET](state, learnset) {
-		state.learnsets.splice(state.learnsets.findIndex(l => l.id === learnset.id), 1);
+	[DELETE_LEARNSET](state, learnset) { state.learnsets.splice(state.learnsets.findIndex(l => l.id === learnset.id), 1); },
+	[KNOWN_CARD](state, cardIndex) {
+		state.learnset.cards[cardIndex].lastAnswered = state.learnset.lastUsed = Date.now();
+		if(!state.learnset.cards[cardIndex].stage) state.learnset.cards[cardIndex].stage = 1
+		else state.learnset.cards[cardIndex].stage++;
+	},
+	[UNKNOWN_CARD](state, cardIndex) {
+		state.learnset.cards[cardIndex].lastAnswered = state.learnset.lastUsed = Date.now();
+		state.learnset.cards[cardIndex].stage = 0;
 	},
 };
 

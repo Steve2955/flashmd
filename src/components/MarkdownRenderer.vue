@@ -2,7 +2,6 @@
 	<div class="md" ref="body"></div>
 </template>
 
-
 <script>
 export default {
 	name: 'MarkdownRenderer',
@@ -25,3 +24,9 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+.katex * {
+	overflow: hidden;
+}
+</style>
