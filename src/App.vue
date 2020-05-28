@@ -17,7 +17,6 @@ import AddLearnsetModal from '@/components/AddLearnsetModal';
 
 import { DELETE_LEARNSET } from '@/store/mutations.type';
 
-
 export default {
 	name: 'App',
 	components: {
