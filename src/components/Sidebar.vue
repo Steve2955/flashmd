@@ -10,13 +10,13 @@
 			</router-link>
 			<hr class="mx-2"/>
 			<div class="ml-3">
-				<h6 class="font-weight-light">Your Learnsets</h6>
+				<h6 class="font-weight-light text-secondary">Your Learnsets</h6>
 			</div>
 			<router-link :to="{ path: `/learnset/${learnset.id}`}" class="item py-3 d-flex text-decoration-none" v-for="learnset in learnsets" :key="learnset.id" v-bind:class="{ 'active': $route.path == `/learnset/${learnset.id}` }">
 				<div class="text-white align-self-center ml-3">{{learnset.name}}</div>
 			</router-link>
 			<div class="p-2">
-				<button type="button" class="btn btn-outline-primary btn-lg btn-block">Add new Learnset</button>
+				<button type="button" class="btn btn-outline-primary btn-lg btn-block" @click="$emit('addLearnset')">Add new Learnset</button>
 			</div>
 		</div>
 	</nav>

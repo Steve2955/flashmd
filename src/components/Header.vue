@@ -8,12 +8,12 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<div class="navbar-nav ml-auto">
 				<div v-if="learnset && learnset.id  && $route.path.includes('learnset')" class="nav-item">
-					<img src="@/assets/icons/delete.svg" @click="$emit('onDeleteLearnset', learnset)">
+					<img src="@/assets/icons/delete.svg" class="clickable" @click="$emit('onDeleteLearnset', learnset)">
 				</div>
 				<hr class="border-top border-secondary w-100 d-md-none"/>
 				<router-link to="/" v-bind:class="{ 'active': $route.path == '/' }" class="nav-item nav-link d-md-none ml-3" data-toggle="collapse" data-target="#navbarNav">Dashboard</router-link>
 				<hr class="border-top border-secondary w-100 d-md-none"/>
-				<p class="d-md-none py-2 mb-0 font-weight-light">Your Learnsets:</p>
+				<p class="d-md-none py-2 mb-0 font-weight-light text-secondary">Your Learnsets:</p>
 				<router-link :to="{ path: `/learnset/${l.id}`}" class="nav-item nav-link d-md-none ml-3" data-toggle="collapse" data-target="#navbarNav" v-bind:class="{ 'active': learnset && l.id == learnset.id }" v-for="l in learnsets"  :key="l.id">{{l.name}}</router-link>
 			</div>
 		</div>

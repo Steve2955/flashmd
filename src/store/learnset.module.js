@@ -1,4 +1,4 @@
-import { LOAD_MARKDOWN_FROM_FILE, LOAD_MARKDOWN_FROM_URL, LOAD_LEARNSET_FROM_TOKENS, LOAD_LEARNSET_FROM_MARKDOWN } from './actions.type';
+import { LOAD_MARKDOWN_FROM_FILE, LOAD_MARKDOWN_FROM_URL, ADD_LEARNSET_FROM_TOKENS, ADD_LEARNSET_FROM_MARKDOWN } from './actions.type';
 import { SET_LEARNSET, SET_LEARNSET_FROM_ID, PUSH_LEARNSET, RESET_LEARNSET, DELETE_LEARNSET } from './mutations.type';
 import fileDialog from 'file-dialog';
 import learnsetUtil from '@/common/learnset-util';
@@ -25,7 +25,7 @@ const actions = {
 			reader.readAsText(files[0]);
 		});
 	},
-	[LOAD_MARKDOWN_FROM_URL](url) {
+	[LOAD_MARKDOWN_FROM_URL](context, url) {
 		return fetch(url).then((response) => {
 				if(response.status == 200){
 					return response.text();
@@ -34,17 +34,15 @@ const actions = {
 				}
 		});
 	},
-	[LOAD_LEARNSET_FROM_MARKDOWN]({ commit }, md){
+	[ADD_LEARNSET_FROM_MARKDOWN]({ commit }, md){
 		const { markdown, ...options} = md;
 		const learnset =  learnsetUtil.getLearnsetFromMarkdown(markdown, options);
-		commit(SET_LEARNSET, learnset);
 		commit(PUSH_LEARNSET, learnset);
 		return learnset;
 	},
-	[LOAD_LEARNSET_FROM_TOKENS]({ commit }, md) {
+	[ADD_LEARNSET_FROM_TOKENS]({ commit }, md) {
 		const { tokens, ...options} = md;
 		const learnset = learnsetUtil.getLearnsetFromTokens(tokens, options);
-		commit(SET_LEARNSET, learnset);
 		commit(PUSH_LEARNSET, learnset);
 		return learnset;
 	},
