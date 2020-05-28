@@ -5,6 +5,7 @@ import store from './store';
 import 'bootstrap';
 import './assets/app.scss';
 import 'katex/dist/katex.min.css';
+import 'github-fork-ribbon-css/gh-fork-ribbon.css';
 
 import router from './router';
 import Init from './common/init';

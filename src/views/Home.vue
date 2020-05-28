@@ -87,8 +87,7 @@ export default {
 				.catch(err => console.error(err));
 		},
 		openLearnset: function(learnset){
-			this.$store.commit(SET_LEARNSET, learnset);
-			this.$router.push('/learn');
+			this.$router.push(`/learnset/${learnset.id}`);
 		},
 		deleteLearnset: function(learnset){
 			this.$store.commit(DELETE_LEARNSET, learnset);
