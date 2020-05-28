@@ -11,9 +11,14 @@ const routes = [
 		component: Home,
 	},
 	{
-		path: '/learn',
+		path: '/learn/:id',
 		name: 'Learn',
 		component: () => import('../views/Learn.vue'),
+	},
+	{
+		path: '/learnset/:id',
+		name: 'LearnsetOverview',
+		component: () => import('../views/LearnsetOverview.vue'),
 	},
 ];
 
