@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="container">
+		<div class="container pt-3">
 			<div class="card" v-if="learnset && learnset.cards && learnset.cards.length > 1">
 				<div class="card-body bg-dark">
 					<h2 class="h4">{{learnset.cards[currentCard].title}}</h2>
@@ -24,6 +24,8 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { RESET_LEARNSET, SET_LEARNSET_FROM_ID } from '@/store/mutations.type';
+
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 import Footer from '@/components/Footer.vue';
 
@@ -74,6 +76,17 @@ export default {
 	beforeDestroy() {
 		document.removeEventListener('keydown', this._keyListener);
 	},
+	created(){
+		this.$store.commit(SET_LEARNSET_FROM_ID, this.$route.params.id);
+	},
+	beforeRouteUpdate (to, from, next) {
+		this.$store.commit(SET_LEARNSET_FROM_ID, to.params.id);
+		next();
+	},
+	beforeRouteLeave (to, from, next) {
+		this.$store.commit(RESET_LEARNSET);
+		next();
+	}
 };
 </script>
 
