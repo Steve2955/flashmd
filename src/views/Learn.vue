@@ -26,8 +26,8 @@
 import { mapGetters } from "vuex";
 import { RESET_LEARNSET, SET_LEARNSET_FROM_ID, KNOWN_CARD, UNKNOWN_CARD } from '@/store/mutations.type';
 
-import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
-import CardControl from '@/components/CardControl.vue';
+import MarkdownRenderer from '@/components/card/MarkdownRenderer.vue';
+import CardControl from '@/components/card/CardControl.vue';
 
 export default {
 	name: "Learn",

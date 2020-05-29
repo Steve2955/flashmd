@@ -8,15 +8,17 @@
 				<img src="@/assets/icons/dashboard.svg" class="icon ml-3 align-self-center">
 				<div class="text-white text-decoration-none align-self-center ml-3">Dashboard</div>
 			</router-link>
-			<hr class="mx-2"/>
-			<div class="ml-3">
-				<h6 class="font-weight-light text-secondary">Your Learnsets</h6>
-			</div>
-			<router-link :to="{ path: `/learnset/${learnset.id}`}" class="item py-3 d-flex text-decoration-none" v-for="learnset in learnsets" :key="learnset.id" v-bind:class="{ 'active': $route.path == `/learnset/${learnset.id}` }">
-				<div class="text-white align-self-center ml-3">{{learnset.name}}</div>
-			</router-link>
-			<div class="p-2">
-				<button type="button" class="btn btn-outline-primary btn-lg btn-block" @click="$emit('addLearnset')">Add new Learnset</button>
+			<div v-if="learnsets && learnsets.length">
+				<hr class="mx-2"/>
+				<div class="ml-3">
+					<h6 class="font-weight-light text-secondary">Your Learnsets</h6>
+				</div>
+				<router-link :to="{ path: `/learnset/${learnset.id}`}" class="item py-3 d-flex text-decoration-none" v-for="learnset in learnsets" :key="learnset.id" v-bind:class="{ 'active': $route.path == `/learnset/${learnset.id}` }">
+					<div class="text-white align-self-center ml-3">{{learnset.name}}</div>
+				</router-link>
+				<div class="p-2">
+					<button type="button" class="btn btn-outline-primary btn-lg btn-block" @click="$emit('addLearnset')">Add new Learnset</button>
+				</div>
 			</div>
 		</div>
 	</nav>

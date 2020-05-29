@@ -1,6 +1,6 @@
 <template>
 	<div class="container pt-2">
-		<LearnsetProgressChart :learnset="learnset"/>
+		<LearnsetProgressChart :title="'Learnset Progress'" :progress="{known: $store.getters.learnsetKnownCardsCount, learning:$store.getters.learnsetLearningCardsCount, unknown:$store.getters.learnsetUnknownCardsCount}"/>
 		<div class="">
 			<router-link :to="{ path: `/learn/${learnset.id}`}" class="btn btn-outline-primary">Continue Learning</router-link>
 		</div>
@@ -11,8 +11,7 @@
 import { mapGetters } from "vuex";
 import { SET_LEARNSET_FROM_ID, RESET_LEARNSET } from '@/store/mutations.type';
 
-import LearnsetProgressChart from '@/components/LearnsetProgressChart.vue';
-
+import LearnsetProgressChart from '@/components/learnset/LearnsetProgressChart';
 
 export default {
 	name: 'Home',

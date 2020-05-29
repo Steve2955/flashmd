@@ -1,5 +1,5 @@
 import { LOAD_MARKDOWN_FROM_FILE, LOAD_MARKDOWN_FROM_URL, ADD_LEARNSET_FROM_TOKENS, ADD_LEARNSET_FROM_MARKDOWN } from './actions.type';
-import { SET_LEARNSET, SET_LEARNSET_FROM_ID, PUSH_LEARNSET, RESET_LEARNSET, DELETE_LEARNSET, KNOWN_CARD, UNKNOWN_CARD } from './mutations.type';
+import { SET_LEARNSET, UPDATE_LEARNSET, SET_LEARNSET_FROM_ID, PUSH_LEARNSET, RESET_LEARNSET, DELETE_LEARNSET, KNOWN_CARD, UNKNOWN_CARD } from './mutations.type';
 import fileDialog from 'file-dialog';
 import learnsetUtil from '@/common/learnset-util';
 
@@ -10,7 +10,25 @@ const state = {
 
 const getters = {
 	learnset: state => state.learnset,
+	learnsetUnknownCardsCount: state => (state.learnset.cards.filter(c => !c.stage || c.stage == 0)).length,
+	learnsetLearningCardsCount: state => (state.learnset.cards.filter(c => c.stage == 1)).length,
+	learnsetKnownCardsCount: state => (state.learnset.cards.filter(c => c.stage > 1)).length,
 	learnsets: state => state.learnsets,
+	learnsetsUnknownCardsCount: state => {
+		let sum = 0;
+		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => !c.stage || c.stage == 0)).length);
+		return sum;
+	},
+	learnsetsLearningCardsCount: state => {
+		let sum = 0;
+		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage == 1)).length);
+		return sum;
+	},
+	learnsetsKnownCardsCount: state => {
+		let sum = 0;
+		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage > 1)).length);
+		return sum;
+	},
 };
 
 const actions = {
@@ -50,6 +68,10 @@ const actions = {
 
 const mutations = {
 	[SET_LEARNSET](state, learnset) { state.learnset = learnset; },
+	[UPDATE_LEARNSET](state, learnset) {
+		state.learnsets[state.learnsets.findIndex(l => l.id === learnset.id)] = learnset;
+		if(state.learnset.id === learnset.id) state.learnset = learnset;
+	},
 	[PUSH_LEARNSET](state, learnset) { state.learnsets.push(learnset); },
 	[SET_LEARNSET_FROM_ID](state, id) { state.learnset = state.learnsets.find(l => l.id === id); },
 	[RESET_LEARNSET](state) { state.learnset = undefined },

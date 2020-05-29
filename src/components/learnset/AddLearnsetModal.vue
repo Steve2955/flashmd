@@ -11,7 +11,7 @@
 							<label class="font-weight-bold">From URL</label>
 							<input type="text" v-model="options.url" class="form-control" placeholder="URL">
 						</div>
-						<p class="text-center my-4 font-weight-bold h5">OR</p>
+						<hr class="hr-text my-5" data-content="OR"/>
 						<button @click="openFile" type="button" class="btn btn-outline-primary btn-lg btn-block" name="button">From File</button>
 					</form>
 					<form v-if="step == 1" class="container">
@@ -99,3 +99,36 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/variables';
+
+.hr-text {
+	line-height: 1em;
+	position: relative;
+	outline: 0;
+	border: 0;
+	text-align: center;
+	height: 3em;
+	&:before {
+		content: '';
+		background-color: $gray-100;
+		position: absolute;
+		left: 0;
+		top: 50%;
+		width: 100%;
+		height: 1px;
+	}
+	&:after {
+		content: attr(data-content);
+		position: relative;
+		display: inline-block;
+		color: black;
+		padding: 0 .5em;
+		line-height: 1.5em;
+		font-size: 2em;
+		color: $white;
+		background-color: $modal-content-bg;
+	}
+}
+</style>
