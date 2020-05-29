@@ -10,7 +10,25 @@ const state = {
 
 const getters = {
 	learnset: state => state.learnset,
+	learnsetUnknownCardsCount: state => (state.learnset.cards.filter(c => !c.stage || c.stage == 0)).length,
+	learnsetLearningCardsCount: state => (state.learnset.cards.filter(c => c.stage == 1)).length,
+	learnsetKnownCardsCount: state => (state.learnset.cards.filter(c => c.stage > 1)).length,
 	learnsets: state => state.learnsets,
+	learnsetsUnknownCardsCount: state => {
+		let sum = 0;
+		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => !c.stage || c.stage == 0)).length);
+		return sum;
+	},
+	learnsetsLearningCardsCount: state => {
+		let sum = 0;
+		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage == 1)).length);
+		return sum;
+	},
+	learnsetsKnownCardsCount: state => {
+		let sum = 0;
+		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage > 1)).length);
+		return sum;
+	},
 };
 
 const actions = {

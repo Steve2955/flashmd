@@ -1,7 +1,7 @@
 <template>
 	<div class="card bg-dark border border-secondary mb-3">
 		<div class="card-body">
-			<h5 class="card-title">Your Progress</h5>
+			<h5 v-if="title" class="card-title">{{title}}</h5>
 			<canvas id="progressChart" class="my-3"></canvas>
 		</div>
 	</div>
@@ -12,24 +12,27 @@ import 'chart.js';
 
 export default {
 	name: 'LearnsetListItem',
+	data(){
+		return {
+			chart: undefined,
+			config: undefined,
+		};
+	},
 	props: {
-		learnset: Object,
+		progress: Object,
+		title: String,
 	},
 	methods: {
 		createChart: function(){
 			const ctx = document.getElementById('progressChart').getContext('2d');
-			const config = {
+			this.config = {
 				type: 'pie',
 				data: {
 					labels: ['Unknown', 'Learning', 'Known'],
 					datasets: [{
 						borderColor: '#121212',
-						backgroundColor: [
-							'#F44336',
-							'#FFEB3B',
-							'#4CAF50',
-						],
-						data: [(this.learnset.cards.filter(c => !c.stage || c.stage == 0)).length, (this.learnset.cards.filter(c => c.stage == 1)).length, (this.learnset.cards.filter(c => c.stage > 1)).length],
+						backgroundColor: [ '#F44336', '#FFEB3B', '#4CAF50' ],
+						data: [ this.progress.unknown, this.progress.learning, this.progress.known ],
 					}],
 				},
 				options: {
@@ -40,15 +43,16 @@ export default {
 				},
 			};
 			// eslint-disable-next-line
-			this.chart = new Chart(ctx, config);
+			this.chart = new Chart(ctx, this.config);
 		}
 	},
 	mounted(){
 		this.createChart();
 	},
 	watch:{
-		learnset: function(){
-			this.createChart();
+		progress: function(newProgress){
+			this.config.data.datasets[0].data = [ newProgress.unknown, newProgress.learning, newProgress.known ];
+			this.chart.update();
 		},
 	},
 };

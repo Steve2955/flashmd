@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import LearnsetListItem from '@/components/LearnsetListItem.vue';
+import LearnsetListItem from '@/components/learnset/LearnsetListItem.vue';
 
 export default {
 	name: 'LearnsetList',

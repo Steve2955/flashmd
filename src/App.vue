@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
-import AddLearnsetModal from '@/components/AddLearnsetModal';
-import EditLearnsetModal from '@/components/EditLearnsetModal';
+import Header from '@/components/layout/Header';
+import Sidebar from '@/components/layout/Sidebar';
+import AddLearnsetModal from '@/components/learnset/AddLearnsetModal';
+import EditLearnsetModal from '@/components/learnset/EditLearnsetModal';
 
 import { DELETE_LEARNSET } from '@/store/mutations.type';
 
