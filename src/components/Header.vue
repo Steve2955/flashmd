@@ -7,7 +7,10 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<div class="navbar-nav ml-auto">
-				<img v-if="learnset && learnset.id  && $route.path.includes('learnset')" src="@/assets/icons/delete.svg" class="nav-item clickable" @click="$emit('onDeleteLearnset', learnset)">
+				<div v-if="learnset && learnset.id  && $route.path.includes('learnset')"  class="nav-item d-flex justify-content-around">
+					<img src="@/assets/icons/edit.svg" class="clickable" @click="$emit('onEditLearnset', learnset)">
+					<img src="@/assets/icons/delete.svg" class="clickable" @click="$emit('onDeleteLearnset', learnset)">
+				</div>
 				<hr class="border-top border-secondary w-100 d-md-none"/>
 				<router-link to="/" v-bind:class="{ 'active': $route.path == '/' }" class="nav-item nav-link d-md-none ml-3" data-toggle="collapse" data-target="#navbarNav">Dashboard</router-link>
 				<hr class="border-top border-secondary w-100 d-md-none"/>

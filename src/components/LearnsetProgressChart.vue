@@ -33,6 +33,7 @@ export default {
 					}],
 				},
 				options: {
+					maintainAspectRatio: false,
 					legend: {
 						position: 'bottom',
 					},
@@ -52,3 +53,9 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+#progressChart{
+	max-height: 15rem;
+}
+</style>
