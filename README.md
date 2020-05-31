@@ -36,6 +36,23 @@ The core technology this project is build on is ```Vue.js```. ```Markdown-it``` 
 * [highlight.js](https://highlightjs.org/)
 * [Bootstrap](https://getbootstrap.com)
 
+## Getting started
+
+First clone this project
+```sh
+git clone https://github.com/Steve2955/flashmd.git
+cd flashmd
+```
+Next install all dependencies (you will need [Node.js](https://nodejs.org/) with [NPM](https://www.npmjs.com/) for that)
+```sh
+npm install
+```
+Now you will be able to run a dev-server or build the whole project.
+```sh
+npm run serve
+npm run build
+```
+
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
