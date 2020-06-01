@@ -11,7 +11,7 @@
 			</p>
 		</div>
 		<div class="container">
-			<LearnsetProgressChart :title="'Overall Progress'" :progress="{known: $store.getters.learnsetsKnownCardsCount, learning:$store.getters.learnsetsLearningCardsCount, unknown:$store.getters.learnsetsUnknownCardsCount}"/>
+			<LearnsetProgressChart v-if="learnsets.length" :title="'Overall Progress'" :progress="{known: $store.getters.learnsetsKnownCardsCount, learning:$store.getters.learnsetsLearningCardsCount, unknown:$store.getters.learnsetsUnknownCardsCount}"/>
 			<LearnsetList :learnsets="learnsets" @onLearnsetSelected="openLearnset" @onDeleteLearnset="deleteLearnset"/>
 		</div>
 	</div>

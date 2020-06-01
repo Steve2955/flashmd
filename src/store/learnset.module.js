@@ -10,23 +10,23 @@ const state = {
 
 const getters = {
 	learnset: state => state.learnset,
-	learnsetUnknownCardsCount: state => (state.learnset.cards.filter(c => !c.stage || c.stage == 0)).length,
-	learnsetLearningCardsCount: state => (state.learnset.cards.filter(c => c.stage == 1)).length,
-	learnsetKnownCardsCount: state => (state.learnset.cards.filter(c => c.stage > 1)).length,
+	learnsetUnknownCardsCount: state => (state.learnset.cards.filter(c => !c.stage || c.stage <= 0)).length,
+	learnsetLearningCardsCount: state => (state.learnset.cards.filter(c => c.stage && c.stage > 0 && c.stage < 3)).length,
+	learnsetKnownCardsCount: state => (state.learnset.cards.filter(c => c.stage && c.stage >= 3)).length,
 	learnsets: state => state.learnsets,
 	learnsetsUnknownCardsCount: state => {
 		let sum = 0;
-		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => !c.stage || c.stage == 0)).length);
+		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => !c.stage || c.stage <= 0)).length);
 		return sum;
 	},
 	learnsetsLearningCardsCount: state => {
 		let sum = 0;
-		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage == 1)).length);
+		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage && c.stage > 0 && c.stage < 3)).length);
 		return sum;
 	},
 	learnsetsKnownCardsCount: state => {
 		let sum = 0;
-		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage > 1)).length);
+		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage && c.stage >= 3)).length);
 		return sum;
 	},
 };
@@ -83,7 +83,7 @@ const mutations = {
 	},
 	[UNKNOWN_CARD](state, cardIndex) {
 		state.learnset.cards[cardIndex].lastAnswered = state.learnset.lastUsed = Date.now();
-		state.learnset.cards[cardIndex].stage = 0;
+		state.learnset.cards[cardIndex].stage = state.learnset.cards[cardIndex].stage-1 || 0;
 	},
 };
 

@@ -7,17 +7,17 @@ hr {
 }
 
 * {
-	overflow: overlay;
+//	overflow: overlay;
 }
 
 .clickable {
 	cursor: pointer;
 }
 
-ul li::before {
+/*ul li::before {
 	content: "\2022";
 	color: $gray-100;
 	font-weight: bold;
 	display: inline-block;
 	width: 1em;
-}
+}*/

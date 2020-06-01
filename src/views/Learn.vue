@@ -3,6 +3,7 @@
 		<div class="container pt-3 mb-3">
 			<div class="card" v-if="learnset && learnset.cards && learnset.cards.length > 1">
 				<div class="card-body bg-dark">
+					<h6 v-if="learnset.cards[currentCard].category">{{learnset.cards[currentCard].category}}</h6>
 					<h2 class="h4">{{learnset.cards[currentCard].title}}</h2>
 					<MarkdownRenderer v-if="showBack" :elements="learnset.cards[currentCard].back"/>
 				</div>
@@ -39,6 +40,7 @@ export default {
 		return {
 			currentCard: 0,
 			showBack: false,
+			lastPress: 0,
 		};
 	},
 	computed: {
@@ -55,15 +57,27 @@ export default {
 		},
 		knownCard: function(){
 			this.$store.commit(KNOWN_CARD, this.currentCard);
-			this.nextCard();
+			this.nextActiveCard();
 		},
 		unknownCard: function(){
 			this.$store.commit(UNKNOWN_CARD, this.currentCard);
-			this.nextCard();
+			this.nextActiveCard();
+		},
+		nextActiveCard: function(){
+			const maxSimultaneous = 5;
+			const minStage = this.learnset.cards.reduce((min, cur) => Math.min(min, cur.stage || 0), Infinity);
+			let activeCards = this.learnset.cards.filter(c => c.stage <= minStage || (minStage == 0 && !c.stage));
+			if(activeCards.length > maxSimultaneous) activeCards = (activeCards.sort((a,b) => (a.lastAnswered || 0) - (b.lastAnswered || -Infinity))).splice(0, maxSimultaneous);
+			this.showBack = false;
+			this.currentCard = this.learnset.cards.findIndex(c => c.id === activeCards[0].id);
 		},
 	},
 	mounted() {
 		this._keyListener = function(e){
+			const now = Date.now();
+			if (now - this.lastPress < 200) return;
+			this.lastPress = now;
+
 			switch(e.keyCode){
 				case 32: // space
 					e.preventDefault();
@@ -88,6 +102,7 @@ export default {
 	},
 	created(){
 		this.$store.commit(SET_LEARNSET_FROM_ID, this.$route.params.id);
+		this.nextActiveCard();
 	},
 	beforeRouteUpdate (to, from, next) {
 		this.$store.commit(SET_LEARNSET_FROM_ID, to.params.id);
