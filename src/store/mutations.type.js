@@ -1,5 +1,6 @@
 export const SET_LEARNSET = 'setLearnset';
 export const UPDATE_LEARNSET = 'updateLearnset';
+export const RESET_PROGRESS_LEARNSET = 'resetProgressLearnset';
 export const SET_LEARNSET_FROM_ID = 'setLearnsetFromId';
 export const PUSH_LEARNSET = 'pushLearnset';
 export const RESET_LEARNSET = 'resetLearnset';
