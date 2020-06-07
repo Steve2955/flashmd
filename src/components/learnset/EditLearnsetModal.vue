@@ -3,19 +3,18 @@
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Rename Learnset</h5>
+					<h5 class="modal-title">Edit Learnset</h5>
 				</div>
 				<div class="modal-body">
 					<form class="container">
-						<form class="container">
-							<div class="form-group">
-								<label class="font-weight-bold">Give this learnset a name</label>
-								<input v-if="learnset" type="text" v-model="learnset.name" class="form-control" placeholder="Learnset Name">
-							</div>
-						</form>
+						<div class="form-group">
+							<label class="font-weight-bold">Name</label>
+							<input v-if="learnset" type="text" v-model="learnset.name" class="form-control" placeholder="Learnset Name">
+						</div>
 					</form>
 				</div>
-				<div class="modal-footer">
+				<div class="modal-footer mx-3">
+					<button type="button" class="btn btn-outline-danger mr-auto" @click="resetProgress">Reset Progress</button>
 					<button type="button" class="btn btn-secondary" @click="$emit('update:active', false)" data-dismiss="modal">Cancel</button>
 					<button type="button" class="btn btn-primary" @click="updateLearnset">Save</button>
 				</div>
@@ -26,7 +25,7 @@
 
 <script>
 import $ from 'jquery';
-import { UPDATE_LEARNSET } from '@/store/mutations.type';
+import { UPDATE_LEARNSET, RESET_PROGRESS_LEARNSET } from '@/store/mutations.type';
 
 export default {
 	name: 'EditLearnsetModal',
@@ -47,6 +46,12 @@ export default {
 	methods: {
 		updateLearnset: function(){
 			this.$store.commit(UPDATE_LEARNSET, this.learnset);
+			this.$emit('update:active', false);
+		},
+		resetProgress: function(){
+			const sure = confirm(`All of your progress in this learnset will be reset. Are you sure?`);
+			if(!sure) return;
+			this.$store.commit(RESET_PROGRESS_LEARNSET);
 			this.$emit('update:active', false);
 		}
 	},
