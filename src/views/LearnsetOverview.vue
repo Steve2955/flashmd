@@ -1,6 +1,6 @@
 <template>
 	<div class="container pt-2">
-		<LearnsetProgressChart :title="'Learnset Progress'" :progress="{known: $store.getters.learnsetKnownCardsCount, learning:$store.getters.learnsetLearningCardsCount, unknown:$store.getters.learnsetUnknownCardsCount}"/>
+		<LearnsetProgressChart :title="'Learnset Progress'" :progress="learnset.progressSummary"/>
 		<div class="">
 			<router-link :to="{ path: `/learn/${learnset.id}`}" class="btn btn-outline-primary">Continue Learning</router-link>
 		</div>

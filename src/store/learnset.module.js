@@ -9,25 +9,10 @@ const state = {
 };
 
 const getters = {
-	learnset: state => state.learnset,
-	learnsetUnknownCardsCount: state => (state.learnset.cards.filter(c => !c.stage || c.stage <= 0)).length,
-	learnsetLearningCardsCount: state => (state.learnset.cards.filter(c => c.stage && c.stage > 0 && c.stage < 3)).length,
-	learnsetKnownCardsCount: state => (state.learnset.cards.filter(c => c.stage && c.stage >= 3)).length,
+	learnset: state => state.learnset || undefined,
 	learnsets: state => state.learnsets,
-	learnsetsUnknownCardsCount: state => {
-		let sum = 0;
-		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => !c.stage || c.stage <= 0)).length);
-		return sum;
-	},
-	learnsetsLearningCardsCount: state => {
-		let sum = 0;
-		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage && c.stage > 0 && c.stage < 3)).length);
-		return sum;
-	},
-	learnsetsKnownCardsCount: state => {
-		let sum = 0;
-		state.learnsets.forEach(learnset => sum += (learnset.cards.filter(c => c.stage && c.stage >= 3)).length);
-		return sum;
+	globalProgressSummary: state => {
+		return learnsetUtil.getLearnsetsProgressSummary(state.learnsets);
 	},
 };
 
@@ -67,24 +52,39 @@ const actions = {
 };
 
 const mutations = {
-	[SET_LEARNSET](state, learnset) { state.learnset = learnset; },
+	[SET_LEARNSET](state, learnset) {
+		state.learnset = learnset;
+	},
 	[UPDATE_LEARNSET](state, learnset) {
 		state.learnsets[state.learnsets.findIndex(l => l.id === learnset.id)] = learnset;
 		if(state.learnset.id === learnset.id) state.learnset = learnset;
 	},
-	[RESET_PROGRESS_LEARNSET](state) { state.learnset.cards.forEach(c => c.stage = 0); },
-	[PUSH_LEARNSET](state, learnset) { state.learnsets.push(learnset); },
-	[SET_LEARNSET_FROM_ID](state, id) { state.learnset = state.learnsets.find(l => l.id === id); },
-	[RESET_LEARNSET](state) { state.learnset = undefined },
-	[DELETE_LEARNSET](state, learnset) { state.learnsets.splice(state.learnsets.findIndex(l => l.id === learnset.id), 1); },
+	[RESET_PROGRESS_LEARNSET](state) {
+		state.learnset.cards.forEach(c => c.stage = 0);
+	},
+	[PUSH_LEARNSET](state, learnset) {
+		state.learnsets.push(learnset);
+	},
+	[SET_LEARNSET_FROM_ID](state, id) {
+		state.learnset = state.learnsets.find(l => l.id === id);
+	},
+	[RESET_LEARNSET](state) {
+		state.learnset = undefined
+	},
+	[DELETE_LEARNSET](state, learnset) {
+		state.learnsets.splice(state.learnsets.findIndex(l => l.id === learnset.id), 1);
+	},
 	[KNOWN_CARD](state, cardIndex) {
 		state.learnset.cards[cardIndex].lastAnswered = state.learnset.lastUsed = Date.now();
 		if(!state.learnset.cards[cardIndex].stage) state.learnset.cards[cardIndex].stage = 1
 		else state.learnset.cards[cardIndex].stage++;
+		state.learnset.progressSummary = learnsetUtil.getLearnsetProgressSummary(state.learnset);
 	},
 	[UNKNOWN_CARD](state, cardIndex) {
 		state.learnset.cards[cardIndex].lastAnswered = state.learnset.lastUsed = Date.now();
-		state.learnset.cards[cardIndex].stage = state.learnset.cards[cardIndex].stage-1 || 0;
+		if(!state.learnset.cards[cardIndex].stage) state.learnset.cards[cardIndex].stage = 1
+		state.learnset.cards[cardIndex].stage = Math.max(0, --state.learnset.cards[cardIndex].stage);
+		state.learnset.progressSummary = learnsetUtil.getLearnsetProgressSummary(state.learnset);
 	},
 };
 

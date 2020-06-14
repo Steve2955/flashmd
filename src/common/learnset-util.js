@@ -46,10 +46,37 @@ export default {
 		const { url, name } = options;
 		const id = uuidv4();
 		const created = Date.now();
+		const progressSummary = this.getLearnsetProgressSummary({ cards });
 		// return everything
-		return { cards, url, name, id, created };
+		return { cards, url, name, id, created, progressSummary };
 	},
 	getLearnsetFromMarkdown(markdown, options){
 		return this.getLearnsetFromTokens(this.getTokensFromMarkdown(markdown), options);
 	},
+	getLearnsetProgressSummary(learnset){
+		let unknown = 0, learning = 0, known = 0;
+		for(let i = 0; i < learnset.cards.length; i++){
+			if(!learnset.cards[i].stage || learnset.cards[i].stage <= 0) unknown++;
+			else if(learnset.cards[i].stage && learnset.cards[i].stage > 0 && learnset.cards[i].stage < 3) learning++;
+			else if(learnset.cards[i].stage && learnset.cards[i].stage >= 3) known++;
+		}
+		const state = this.getLearnsetsProgressState({progressSummary: {unknown, learning, known}});
+		return { unknown, learning, known, state };
+	},
+	getLearnsetsProgressSummary(learnsets){
+		let unknown = 0, learning = 0, known = 0;
+		for(let i=0; i < learnsets.length; i++){
+			unknown += learnsets[i].progressSummary.unknown;
+			learning += learnsets[i].progressSummary.learning;
+			known += learnsets[i].progressSummary.known;
+		}
+		return { unknown, learning, known };
+	},
+	getLearnsetsProgressState(learnset){
+		const { unknown, learning, known } = learnset.progressSummary;
+		const total = unknown + learning + known;
+		if(known > total * 0.90) return 'known';
+		if(learning + known > total * 0.3) return 'learning';
+		return 'unknown';
+	}
 };

@@ -13,8 +13,9 @@
 				<div class="ml-3">
 					<h6 class="font-weight-light text-secondary">Your Learnsets</h6>
 				</div>
-				<router-link :to="{ path: `/learnset/${learnset.id}`}" class="item py-3 d-flex text-decoration-none" v-for="learnset in learnsets" :key="learnset.id" v-bind:class="{ 'active': $route.path == `/learnset/${learnset.id}` }">
-					<div class="text-white align-self-center ml-3">{{learnset.name}}</div>
+				<router-link :to="{ path: `/learnset/${learnset.id}`}" class="item p-3 d-flex justify-content-between align-items-center text-decoration-none" v-for="learnset in learnsets" :key="learnset.id" v-bind:class="{ 'active': $route.path == `/learnset/${learnset.id}` }">
+					<div class="text-white pr-auto">{{learnset.name}}</div>
+					<div class="dot" :class="{ 'yellow': learnset.progressSummary.state == 'learning', 'green': learnset.progressSummary.state == 'known' }"></div>
 				</router-link>
 				<div class="p-2">
 					<button type="button" class="btn btn-outline-primary btn-lg btn-block" @click="$emit('addLearnset')">Add new Learnset</button>
@@ -48,6 +49,23 @@ export default {
 	z-index: 999;
 	color: #fff;
 	transition: all 0.3s;
+}
+
+.dot {
+	height: 15px !important;
+	width: 15px !important;
+	background-color: #F44336;
+	border-radius: 50%;
+	display: inline-block;
+	flex-shrink: 0;
+}
+
+.dot.yellow{
+	background-color: #FFEB3B;
+}
+
+.dot.green{
+	background-color: #4CAF50;
 }
 
 .sidebar-content .item {
