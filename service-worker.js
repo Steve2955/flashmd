@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/flashmd/precache-manifest.d99d21574858ffe5764c12f610a2273a.js"
+  "/flashmd/precache-manifest.3142e10c696a3bb70cdbb1816002caca.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "flashmd"});
